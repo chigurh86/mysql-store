@@ -69,9 +69,18 @@ var addInventory = function(){
       type: "input",
       message: "What is the name of the product?"
     },{
-    }]).then(function(answer){}
+      name: "amount",
+      type: "input",
+      message: "How many would you like to add?"
+    }]).then(function(answer){
+      var newAmount = answer.amount + res[0].stock_quantity;
+      connection.query("UPDATE products SET ? WHERE ?", [{
+        stock_quantity: newAmount
+      },{
+        id:answer.prodid
+      }], function(err, res) {});
+    });
 }
-
 var addNewProduct = function(){
   inquirer.prompt([{
       name: "prodid",
