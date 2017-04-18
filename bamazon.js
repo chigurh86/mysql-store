@@ -43,15 +43,10 @@ console.log("");
             	console.log(res[i].id + ": " + res[i].product_name + "|" + " Department: "
   					+ res[i].department_name + "|" +" Price: " + res[i].price + "|" +" Stock Quantity: "+ res[i].stock_quantity);
             	}
-            inquirer.prompt([{
+      inquirer.prompt([{
 			  name: "units",
 		    type: "input",
 		    message: "How many units would you like to buy?"
-        validate: function (value) {
-                if (isNaN(value) === false) {
-                    return true;
-                }
-            }
 			}]).then(function(howmany){
 				if (howmany.units < res[0].stock_quantity) {
           var newAmount = res[0].stock_quantity - howmany.units;
@@ -59,7 +54,9 @@ console.log("");
             stock_quantity: newAmount
           },{
             id:answer.prodid
-          }], function(err, res) {});
+          }], function(err, res) {
+            console.log("debug: " + res.affectedRows);
+          });
 					console.log("You purchased " + res[0].product_name + "s");
           console.log("There are " + newAmount + " left.");
           start();
@@ -68,7 +65,6 @@ console.log("");
 					console.log("Insufficient Quantity!");
           start();
 				}
-
 			});
 		});
 	});

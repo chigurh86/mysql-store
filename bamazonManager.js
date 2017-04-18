@@ -18,29 +18,32 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
 });
-inquirer.prompt([{
-  name: "options",
-  type: 'rawlist',
-  message: "What would you like to do?",
-  choices: ["View Products for Sale","View Low Inventory", "Add to Inventory", "Add New Product"]
-}]).then(function(answer){
-  switch (answer.options) {
-    case "View Products for Sale":
-      saleProducts();
-    break;
-    case "View Low Inventory":
-      lowInventory();
-    break;
-    case "Add to Inventory":
-      addInventory();
-    break;
-    case "Add New Product":
-      addNewProduct();
-    break;
-    default:
-    console.log("Error");
-  }
-});
+var starter = function(){
+  inquirer.prompt([{
+    name: "options",
+    type: 'rawlist',
+    message: "What would you like to do?",
+    choices: ["View Products for Sale","View Low Inventory", "Add to Inventory", "Add New Product"]
+  }]).then(function(answer){
+    switch (answer.options) {
+      case "View Products for Sale":
+        saleProducts();
+      break;
+      case "View Low Inventory":
+        lowInventory();
+      break;
+      case "Add to Inventory":
+        addInventory();
+      break;
+      case "Add New Product":
+        addNewProduct();
+      break;
+      default:
+      console.log("Error");
+    }
+  });
+}
+starter();
 var saleProducts = function(){
   connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
@@ -54,20 +57,46 @@ var saleProducts = function(){
 var lowInventory = function(){
   connection.query("SELECT * FROM products WHERE quantity=?", [100], function(err, res) {
       console.log(res);
-    // for (var i = 0; i < res.length; i++) {
-    //   console.log(res[i].stock_quantity + " | " + res[i].id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price);
-    // }
+      // for (i = 0; i < res.length; i++) {
+      //   console.log(res[i].stock_quantity + " | " + res[i].id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price);
+      // }
   });
 }
 
-// var addInventory = function(){
-//
-// }
+var addInventory = function(){
+  inquirer.prompt([{
+      name: "prodid",
+      type: "input",
+      message: "What is the name of the product?"
+    },{
+    }]).then(function(answer){}
+}
+
 var addNewProduct = function(){
+  inquirer.prompt([{
+      name: "prodid",
+      type: "input",
+      message: "What is the name of the new product?"
+    },{
+      name: "department",
+      type: "input",
+      message: "What department does it belong in?"
+    },{
+      name: "price",
+      type: "input",
+      message: "How much is the item?"
+    },{
+      name: "quantity",
+      type: "input",
+      message: "How many are there?"
+    }]).then(function(answer){
   connection.query("INSERT INTO products SET ?", {
-    product_name: "Rocky Road",
-    department_name: "Ice Cream",
-    price:3.00,
-    stock_quantity: 50
+    product_name: answer.prodid,
+    department_name: answer.department,
+    price:answer.price,
+    stock_quantity: answer.quantity
   }, function(err, res) {});
+    console.log("New item added!");
+    starter();
+  });
 }
