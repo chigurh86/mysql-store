@@ -1,3 +1,5 @@
+CREATE DATABASE Bamazon;
+
 USE Bamazon;
 
 CREATE TABLE products (

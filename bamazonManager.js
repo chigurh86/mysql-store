@@ -55,11 +55,10 @@ var saleProducts = function(){
   });
 }
 var lowInventory = function(){
-  connection.query("SELECT * FROM products WHERE quantity=?", [100], function(err, res) {
-      console.log(res);
-      // for (i = 0; i < res.length; i++) {
-      //   console.log(res[i].stock_quantity + " | " + res[i].id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price);
-      // }
+  connection.query("SELECT * FROM products WHERE stock_quantity=?", [98], function(err, res) {
+    for (var i = 0; i < res.length; i++) {
+      console.log(res[i].id + " | " + res[i].product_name + " | " + res[i].price + " | " + res[i].stock_quantity );
+    }
   });
 }
 
