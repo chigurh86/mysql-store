@@ -53,13 +53,16 @@ var saleProducts = function(){
     		+ res[i].department_name + "|" +" Price: " + res[i].price + "|" +" Stock Quantity: "+ res[i].stock_quantity);
     	}
   });
+  connection.end();
 }
 var lowInventory = function(){
-  connection.query("SELECT * FROM products WHERE stock_quantity=?", [98], function(err, res) {
+  console.log("These are items are low:");
+  connection.query("SELECT * FROM products WHERE stock_quantity=?", [1], function(err, res) {
     for (var i = 0; i < res.length; i++) {
       console.log(res[i].id + " | " + res[i].product_name + " | " + res[i].price + " | " + res[i].stock_quantity );
     }
   });
+  connection.end();
 }
 
 var addInventory = function(){
@@ -74,12 +77,13 @@ var addInventory = function(){
     }]).then(function(answer){
       var newAmount = answer.amount + res[0].stock_quantity;
       connection.query("UPDATE products SET ? WHERE ?", [{
-        stock_quantity: newAmount
+        stock_quantity: newAmount,
       },{
-        id:answer.prodid
-      }], function(err, res) {});
+        id:answer.prodid,
+      }], function(err, res) { console.log(res)});
     });
 }
+
 var addNewProduct = function(){
   inquirer.prompt([{
       name: "prodid",
@@ -105,6 +109,6 @@ var addNewProduct = function(){
     stock_quantity: answer.quantity
   }, function(err, res) {});
     console.log("New item added!");
-    starter();
+    connection.end();
   });
 }
